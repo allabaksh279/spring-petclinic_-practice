@@ -37,4 +37,10 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: spring-petclinic-${{ matrix.java }}.jar
-                path: '**/target/*.jar'      
+                path: '**/target/*.jar' 
+            - name: send email on failure
+              run: "everything seems problamatic"
+              if: ${{ failure() }}         
+            - name: send email on failure
+              run: "everything seems good"
+              
