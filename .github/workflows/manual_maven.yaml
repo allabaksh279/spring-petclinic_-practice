@@ -8,7 +8,9 @@ on:
 permissions:
   checks: write
   contents: read
-  pull-requests: write    
+  pull-requests: write  
+  actions: read
+  security-events: write  
   
 jobs:
     manual:
