@@ -45,7 +45,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: java
-          build-mode: none  # or 'autobuild' for more accurate analysis [web:20]
+          build-mode: autobuild  # or 'autobuild' for more accurate analysis [web:20]
       
       # 4. Build with Maven using GOAL variable
       - name: Build package
