@@ -1,0 +1,68 @@
+name: Manual Maven Steps for CI
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:    
+
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
+  actions: read
+  security-events: write
+
+jobs:
+  manual:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [17, 21]
+
+
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-java@v4
+              with:
+                distribution: 'temurin'
+                java-version: ${{ matrix.java }}
+                cache: maven
+
+    steps:
+      # 1. Checkout code (use v4, not v5)
+      - uses: actions/checkout@v4
+      
+      # 2. Setup Java (use v4, not v5) with Maven cache
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+          cache: maven
+      
+      # 3. Initialize CodeQL with build-mode for Java
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java
+          build-mode: none  # or 'autobuild' for more accurate analysis [web:20]
+      
+      # 4. Build with Maven using GOAL variable
+      - name: Build package
+        run: mvn package --batch-mode
+      
+      # 5. Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        
+      - name: publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: |
+            **/target/surefire-reports/TEST-*.xml
+
+      - name: Uploading packaged jar files
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-petclinic-${{ matrix.java }}.jar
+          path: '**/target/*.jar'
