@@ -49,7 +49,7 @@ jobs:
       
       # 4. Build with Maven using GOAL variable
       - name: Build package
-        run: mvn ${{ vars.GOAL }} --batch-mode
+        run: mvn package --batch-mode
       
       # 5. Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
@@ -59,24 +59,21 @@ jobs:
 >>>>>>> e70aa22883b83e34afff5f117da0ff3ca9ceffe6
 
 
-<<<<<<< HEAD
-            - name: Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis
               uses: github/codeql-action/analyze@v3 
 
 
-            - name: publish test results
-              uses: EnricoMi/publish-unit-test-result-action@v2
-              with:
-                files: | 
+      - name: publish test results
+          uses: EnricoMi/publish-unit-test-result-action@v2
+          with:
+            files: | 
                   **/target/surefire-reports/TEST-*.xml   
                   
-=======
->>>>>>> e70aa22883b83e34afff5f117da0ff3ca9ceffe6
 
        - name: publish test results
           uses: EnricoMi/publish-unit-test-result-action@v2
-            with:
-             files: | 
+          with:
+            files: | 
                  **/target/surefire-reports/TEST-*.xml   
                   
 
