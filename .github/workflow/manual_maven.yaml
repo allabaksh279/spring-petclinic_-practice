@@ -20,7 +20,7 @@ jobs:
       matrix:
         java: [17, 21]
 
-<<<<<<< HEAD
+
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-java@v4
@@ -28,7 +28,7 @@ jobs:
                 distribution: 'temurin'
                 java-version: ${{ matrix.java }}
                 cache: maven
-=======
+
     steps:
       # 1. Checkout code (use v4, not v5)
       - uses: actions/checkout@v4
@@ -40,48 +40,21 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
       
-      # 3. Initialize CodeQL with build-mode for Java
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: java
-          build-mode: none  # or 'autobuild' for more accurate analysis [web:20]
+      
+      
       
       # 4. Build with Maven using GOAL variable
       - name: Build package
-        run: mvn ${{ vars.GOAL }} --batch-mode
+        run: mvn ${{ vars.GOAL }}
       
-      # 5. Perform CodeQL Analysis
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-      
-      
->>>>>>> e70aa22883b83e34afff5f117da0ff3ca9ceffe6
+      - name: publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: |
+            **/target/surefire-reports/TEST-*.xml
 
-
-<<<<<<< HEAD
-            - name: Perform CodeQL Analysis
-              uses: github/codeql-action/analyze@v3 
-
-
-            - name: publish test results
-              uses: EnricoMi/publish-unit-test-result-action@v2
-              with:
-                files: | 
-                  **/target/surefire-reports/TEST-*.xml   
-                  
-=======
->>>>>>> e70aa22883b83e34afff5f117da0ff3ca9ceffe6
-
-       - name: publish test results
-          uses: EnricoMi/publish-unit-test-result-action@v2
-            with:
-             files: | 
-                 **/target/surefire-reports/TEST-*.xml   
-                  
-
-       - name: Uploading packaged jar files
-          uses: actions/upload-artifact@v4
-          with:
-            name: spring-petclinic-${{ matrix.java }}.jar
-            path: '**/target/*.jar'
+      - name: Uploading packaged jar files
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-petclinic-${{ matrix.java }}.jar
+          path: '**/target/*.jar'
