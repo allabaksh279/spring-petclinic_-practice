@@ -1,36 +1,35 @@
-name: Reusable CI for java with maven
+name: Reusable CI for Java with Maven
 
 on:
   workflow_call:
     inputs:
       java-version:
-        description: 'Java version to use'
-        required: true
+        description: Java version to use
+        required: false
         default: '17'
         type: string
       agent:
-        description: 'The type of agent to run the job on'
-        required: true
-        default: 'ubuntu-24.04'
+        description: The type of agent to run the job on
+        required: false
+        default: ubuntu-latest
         type: string
+
 permissions:
   checks: write
   contents: read
   pull-requests: write
   actions: read
   security-events: write
+
 jobs:
   manual:
     runs-on: ${{ inputs.agent }}
-    
-      
-
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
@@ -59,4 +58,3 @@ jobs:
         with:
           name: spring-petclinic.jar
           path: '**/target/*.jar'
-                      
